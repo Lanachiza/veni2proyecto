@@ -1,0 +1,45 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+dist/
+build/
+.next/
+.nuxt/
+.cache/
+.turbo/
+
+# Env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Misc
+.vercel/
+.idea/
+.vscode/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+__pycache__/
+*.sqlite
+*.db
+*.pid
+*.seed
+
+# Keep examples
+!.env.example
