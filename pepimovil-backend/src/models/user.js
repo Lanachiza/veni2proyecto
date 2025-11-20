@@ -7,4 +7,9 @@ export async function upsertUser(user) {
 export async function getUserById(id) {
   return users.get(id) || null;
 }
-
+export async function findUserByEmail(email) {
+  for (const u of users.values()) {
+    if (u.email === email) return u;
+  }
+  return null;
+}

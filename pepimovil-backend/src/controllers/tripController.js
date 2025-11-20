@@ -37,6 +37,45 @@ export async function requestTrip(req, res, next) {
     next(err);
   }
 }
+
+// Compatibilidad: acepta payload del frontend (origin/destination como objetos) y endpoint /api/trips
+export async function requestTripFromWeb(req, res, next) {
+  try {
+    const { user_id, origin, destination } = req.body || {};
+    if (!origin || !destination || origin.lat == null || origin.lng == null || destination.lat == null || destination.lng == null) {
+      return res.status(400).json({ error: 'origin {lat,lng} y destination {lat,lng} requeridos' });
+    }
+    const originArr = [Number(origin.lat), Number(origin.lng)];
+    const destinationArr = [Number(destination.lat), Number(destination.lng)];
+    const userId = user_id || 'web-user';
+
+    const heavy = isHeavyRoute(originArr, destinationArr);
+    const assignedServer = assignServer({
+      userLocation: { lat: originArr[0], lng: originArr[1] },
+      requestType: heavy ? 'heavy' : 'light',
+      priority: 'normal'
+    });
+    const id = uuidv4();
+    const trip = await createTrip({
+      id,
+      user_id: userId,
+      origin: originArr,
+      destination: destinationArr,
+      status: 'pending',
+      assignedServer,
+      createdAt: new Date().toISOString()
+    });
+    const driver = await findNearestDriver({ lat: originArr[0], lng: originArr[1] });
+    if (driver) {
+      await updateTripStatus(id, 'accepted', { driver_id: driver.id });
+      await notifyDriverAssignment(driver, trip);
+    }
+    const result = await getTripById(id);
+    res.status(201).json({ trip: result });
+  } catch (err) {
+    next(err);
+  }
+}
 export async function acceptTrip(req, res, next) {
   try {
     const { id } = req.params;
@@ -85,4 +124,3 @@ function distanceKm(a, b) {
 function deg2rad(d) {
   return (d * Math.PI) / 180;
 }
-

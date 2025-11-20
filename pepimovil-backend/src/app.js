@@ -4,12 +4,24 @@ import morgan from 'morgan';
 import authRoutes from './routes/auth.js';
 import tripRoutes from './routes/trips.js';
 import driverRoutes from './routes/drivers.js';
+import { loginWithPassword, registerWithPassword } from './controllers/authController.js';
+import { requestTripFromWeb } from './controllers/tripController.js';
+import { getStore } from './config/db.js';
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+// Endpoints de compatibilidad con el frontend existente
+app.post('/api/login', loginWithPassword);
+app.post('/api/register', registerWithPassword);
+app.post('/api/trips', requestTripFromWeb);
+app.get('/api/metrics/summary', (req, res) => {
+  const users = getStore('users');
+  const trips = getStore('trips');
+  res.json({ users: users.size, trips: trips.size });
 });
 app.use('/api/auth', authRoutes);
 app.use('/api/trips', tripRoutes);
@@ -22,4 +34,3 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
 });
 export default app;
-
