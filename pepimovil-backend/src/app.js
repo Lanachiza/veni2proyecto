@@ -10,6 +10,7 @@ import { requestTripFromWeb } from './controllers/tripController.js';
 import { getStore } from './config/db.js';
 import { countUsers } from './repositories/userRepository.js';
 import { countTrips } from './repositories/tripRepository.js';
+import { authMiddleware } from './middlewares/auth.js';
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -20,8 +21,8 @@ app.get('/api/health', (req, res) => {
 // Endpoints de compatibilidad con el frontend existente
 app.post('/api/login', loginWithPassword);
 app.post('/api/register', registerWithPassword);
-app.post('/api/trips', requestTripFromWeb);
-app.get('/api/metrics/summary', async (req, res, next) => {
+app.post('/api/trips', authMiddleware, requestTripFromWeb);
+app.get('/api/metrics/summary', authMiddleware, async (req, res, next) => {
   try {
     const users = await countUsers();
     const trips = await countTrips();

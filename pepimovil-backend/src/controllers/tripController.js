@@ -60,11 +60,11 @@ function demoFareKm(km) {
 
 export async function requestTrip(req, res, next) {
   try {
-    const { user_id, origin, destination } = req.body || {};
-    if (!user_id || !origin || !destination) {
+    const { origin, destination } = req.body || {};
+    const userId = await ensureUserId(req.user?.id);
+    if (!userId || !origin || !destination) {
       return res.status(400).json({ error: 'user_id, origin, destination required' });
     }
-    const userId = await ensureUserId(user_id);
     const heavy = isHeavyRoute(origin, destination);
     const assignedServer = assignServer({
       userLocation: { lat: origin[0], lng: origin[1] },
@@ -107,13 +107,13 @@ export async function listAllTrips(req, res, next) {
 // Compatibilidad: acepta payload del frontend (origin/destination como objetos) y endpoint /api/trips
 export async function requestTripFromWeb(req, res, next) {
   try {
-    const { user_id, origin, destination } = req.body || {};
+    const { origin, destination } = req.body || {};
     if (!origin || !destination || origin.lat == null || origin.lng == null || destination.lat == null || destination.lng == null) {
       return res.status(400).json({ error: 'origin {lat,lng} y destination {lat,lng} requeridos' });
     }
     const originArr = [Number(origin.lat), Number(origin.lng)];
     const destinationArr = [Number(destination.lat), Number(destination.lng)];
-    const userId = await ensureUserId(user_id || req.user?.id);
+    const userId = await ensureUserId(req.user?.id);
 
     const heavy = isHeavyRoute(originArr, destinationArr);
     const assignedServer = assignServer({

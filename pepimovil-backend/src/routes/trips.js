@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { requestTrip, acceptTrip, completeTrip, listAllTrips } from '../controllers/tripController.js';
+import { authMiddleware } from '../middlewares/auth.js';
 const router = Router();
+router.use(authMiddleware);
 router.get('/', listAllTrips);
 router.post('/request', requestTrip);
 router.patch('/:id/accept', acceptTrip);
