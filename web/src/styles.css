@@ -463,6 +463,16 @@ button[disabled]{opacity:.6;cursor:not-allowed}
   justify-content:space-between;
   align-items:center;
 }
+.pill-btn.danger{background:#ef4444;}
+.driver-active-box{margin-bottom:12px;}
+.driver-timer-row{display:flex;align-items:center;gap:12px;margin-top:8px;}
+.timer-badge{
+  padding:6px 12px;
+  border-radius:999px;
+  background:#0f172a;
+  color:#ffffff;
+  font-variant-numeric:tabular-nums;
+}
 
 /* Users grid */
 .users-section{

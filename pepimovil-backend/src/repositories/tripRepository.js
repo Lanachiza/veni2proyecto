@@ -14,7 +14,10 @@ function mapTrip(row) {
     createdAt: row.created_at,
     created_at: row.created_at,
     updatedAt: row.updated_at,
-    updated_at: row.updated_at
+    updated_at: row.updated_at,
+    started_at: row.started_at,
+    completed_at: row.completed_at,
+    duration_sec: row.duration_sec
   };
 }
 
@@ -63,6 +66,14 @@ export async function getTripsByUser(userId) {
   return rows.map(mapTrip);
 }
 
+export async function getTripsByDriver(driverId) {
+  const { rows } = await db.query(
+    'SELECT * FROM trips WHERE driver_id = $1 ORDER BY created_at DESC',
+    [driverId]
+  );
+  return rows.map(mapTrip);
+}
+
 export async function updateTripStatus(id, status, extra = {}) {
   const { distanceKm, price, driverId } = extra;
   const query = `
@@ -85,6 +96,28 @@ export async function countTrips() {
   return rows[0]?.total || 0;
 }
 
+export async function findActiveTripByUser(userId) {
+  const { rows } = await db.query(
+    `SELECT * FROM trips
+     WHERE user_id = $1 AND status IN ('created','pending','accepted','active','in_progress')
+     ORDER BY created_at DESC
+     LIMIT 1`,
+    [userId]
+  );
+  return mapTrip(rows[0]);
+}
+
+export async function findActiveTripByDriver(driverId) {
+  const { rows } = await db.query(
+    `SELECT * FROM trips
+     WHERE driver_id = $1 AND status IN ('accepted','active','in_progress')
+     ORDER BY created_at DESC
+     LIMIT 1`,
+    [driverId]
+  );
+  return mapTrip(rows[0]);
+}
+
 export async function findAvailableTrips() {
   const { rows } = await db.query(
     `SELECT * FROM trips
@@ -101,6 +134,33 @@ export async function assignDriver({ tripId, driverId }) {
         status = 'accepted',
         updated_at = NOW()
     WHERE id = $1 AND driver_id IS NULL
+    RETURNING *
+  `;
+  const { rows } = await db.query(query, [tripId, driverId]);
+  return mapTrip(rows[0]);
+}
+
+export async function startTrip({ tripId, driverId }) {
+  const query = `
+    UPDATE trips
+    SET status = 'in_progress',
+        started_at = COALESCE(started_at, NOW()),
+        updated_at = NOW()
+    WHERE id = $1 AND driver_id = $2 AND status = 'accepted'
+    RETURNING *
+  `;
+  const { rows } = await db.query(query, [tripId, driverId]);
+  return mapTrip(rows[0]);
+}
+
+export async function completeTripDriver({ tripId, driverId }) {
+  const query = `
+    UPDATE trips
+    SET status = 'completed',
+        completed_at = NOW(),
+        duration_sec = EXTRACT(EPOCH FROM (NOW() - COALESCE(started_at, NOW()))),
+        updated_at = NOW()
+    WHERE id = $1 AND driver_id = $2 AND status = 'in_progress'
     RETURNING *
   `;
   const { rows } = await db.query(query, [tripId, driverId]);

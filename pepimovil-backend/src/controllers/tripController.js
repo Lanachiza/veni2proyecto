@@ -8,7 +8,10 @@ import {
   createTrip as createTripDb,
   getTripById,
   updateTripStatus,
-  listTrips
+  listTrips,
+  findActiveTripByUser,
+  getTripsByUser,
+  getTripsByDriver
 } from '../repositories/tripRepository.js';
 import { createUser, findUserById } from '../repositories/userRepository.js';
 
@@ -65,6 +68,13 @@ export async function requestTrip(req, res, next) {
     if (!userId || !origin || !destination) {
       return res.status(400).json({ error: 'user_id, origin, destination required' });
     }
+    if (req.user?.role !== 'passenger') {
+      return res.status(403).json({ error: 'Solo pasajeros pueden crear viajes' });
+    }
+    const active = await findActiveTripByUser(userId);
+    if (active) {
+      return res.status(409).json({ error: 'Ya tienes un viaje activo' });
+    }
     const heavy = isHeavyRoute(origin, destination);
     const assignedServer = assignServer({
       userLocation: { lat: origin[0], lng: origin[1] },
@@ -93,6 +103,24 @@ export async function requestTrip(req, res, next) {
 export async function listAllTrips(req, res, next) {
   try {
     const trips = await listTrips();
+    res.json(trips);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function listMyTrips(req, res, next) {
+  try {
+    const trips = await getTripsByUser(req.user?.id);
+    res.json(trips);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function listDriverTrips(req, res, next) {
+  try {
+    const trips = await getTripsByDriver(req.user?.id);
     res.json(trips);
   } catch (err) {
     next(err);
