@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import client from '../api/client.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import MapView from '../components/MapView.jsx'
 
 const PRESET_ROUTES = {
   'Sector 1 - Sur ITESO': {
@@ -22,6 +23,7 @@ export default function NewTrip() {
   const [sector, setSector] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const route = sector ? PRESET_ROUTES[sector] : null
 
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -76,9 +78,13 @@ export default function NewTrip() {
             </label>
 
             <div className="map-placeholder">
-              <p className="map-text">
-                Mapa de ruta para: {sector || 'selecciona un sector para ver la ruta'}
-              </p>
+              {route ? (
+                <MapView origin={route.origin} destination={route.destination} />
+              ) : (
+                <p className="map-text">
+                  Mapa de ruta para: {sector || 'selecciona un sector para ver la ruta'}
+                </p>
+              )}
             </div>
 
             {message && <p className="request-message">{message}</p>}

@@ -8,7 +8,7 @@ const SALT_ROUNDS = Number(process.env.SALT_ROUNDS || 10);
 
 function generateToken(user) {
   return jwt.sign(
-    { id: user.id, email: user.email, name: user.name },
+    { id: user.id, email: user.email, name: user.name, role: user.role },
     JWT_SECRET,
     { expiresIn: '12h' }
   );
@@ -44,11 +44,13 @@ export async function registerWithPassword(req, res, next) {
     }
     const id = uuidv4();
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    const safeRole = role === 'driver' ? 'driver' : 'passenger';
     const user = await createUser({
       id,
       name: name || email.split('@')[0],
       email,
-      passwordHash
+      passwordHash,
+      role: safeRole
     });
     const token = generateToken(user);
     res.status(201).json({ user, token });
@@ -72,6 +74,7 @@ export async function loginWithPassword(req, res, next) {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: user.role,
       created_at: user.created_at
     };
     const token = generateToken(responseUser);

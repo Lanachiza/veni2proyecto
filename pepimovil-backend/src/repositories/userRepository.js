@@ -1,12 +1,12 @@
 import { db } from '../config/db.js';
 
-export async function createUser({ id, name, email, passwordHash }) {
+export async function createUser({ id, name, email, passwordHash, role = 'passenger' }) {
   const query = `
-    INSERT INTO users (id, name, email, password_hash)
-    VALUES ($1, $2, $3, $4)
-    RETURNING id, name, email, created_at
+    INSERT INTO users (id, name, email, password_hash, role)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id, name, email, role, created_at
   `;
-  const params = [id, name, email, passwordHash];
+  const params = [id, name, email, passwordHash, role || 'passenger'];
   const { rows } = await db.query(query, params);
   return rows[0];
 }
@@ -22,7 +22,7 @@ export async function countUsers() {
 }
 
 export async function findUserById(id) {
-  const { rows } = await db.query('SELECT id, name, email, created_at FROM users WHERE id = $1 LIMIT 1', [id]);
+  const { rows } = await db.query('SELECT id, name, email, role, created_at FROM users WHERE id = $1 LIMIT 1', [id]);
   return rows[0] || null;
 }
 

@@ -222,7 +222,7 @@ button[disabled]{opacity:.6;cursor:not-allowed}
 .map-placeholder{
   margin-top:12px;
   width:100%;
-  height:220px;
+  height:260px;
   border-radius:16px;
   background:#e5f0ff;
   display:flex;
@@ -443,6 +443,12 @@ button[disabled]{opacity:.6;cursor:not-allowed}
   cursor:pointer;
 }
 .dash-map .map-text{color:#1f2937;}
+.mapbox-container{
+  width:100%;
+  height:100%;
+  border-radius:16px;
+  overflow:hidden;
+}
 
 /* Users grid */
 .users-section{

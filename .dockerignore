@@ -3,9 +3,7 @@ web/node_modules
 web/dist
 .git
 .gitignore
-.env
 npm-debug.log
 yarn-error.log
 logs
 *.log
-

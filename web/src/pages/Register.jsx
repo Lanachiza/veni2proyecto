@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 export default function Register() {
   const { register } = useAuth()
   const navigate = useNavigate()
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'passenger' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -18,7 +18,7 @@ export default function Register() {
     setError('')
     setLoading(true)
     try {
-      await register(form.name, form.email, form.password)
+      await register(form.name, form.email, form.password, form.role)
       navigate('/dashboard')
     } catch (err) {
       setError('No se pudo crear la cuenta. Intenta de nuevo.')
@@ -71,6 +71,18 @@ export default function Register() {
               className="auth-input"
               required
             />
+          </label>
+          <label className="auth-label">
+            I am a:
+            <select
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              className="auth-input"
+            >
+              <option value="passenger">Passenger</option>
+              <option value="driver">Driver</option>
+            </select>
           </label>
 
           {error && <p className="auth-error">{error}</p>}

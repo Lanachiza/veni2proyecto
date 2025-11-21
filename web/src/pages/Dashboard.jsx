@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom'
 import api from '../api/client.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import UserCard from '../components/UserCard.jsx'
+import MapView from '../components/MapView.jsx'
 
 export default function Dashboard() {
   const { user, logout } = useAuth()
   const [metrics, setMetrics] = useState({ users: 0, trips: 0 })
   const [trips, setTrips] = useState([])
   const [loading, setLoading] = useState(true)
+  const lastTrip = trips?.[0]
 
   useEffect(() => {
     async function fetchData() {
@@ -35,7 +37,14 @@ export default function Dashboard() {
           <div className="dash-card dash-map-card">
             <h2 className="dash-title">Next ride</h2>
             <div className="dash-map">
-              <p className="map-text">Aquí irá el mapa con la ruta actual o próxima.</p>
+              {lastTrip ? (
+                <MapView
+                  origin={{ lat: lastTrip?.origin?.[0], lng: lastTrip?.origin?.[1] }}
+                  destination={{ lat: lastTrip?.destination?.[0], lng: lastTrip?.destination?.[1] }}
+                />
+              ) : (
+                <p className="map-text">No trips yet. Request your first ride.</p>
+              )}
             </div>
             <Link to="/new-trip" className="primary-cta">
               Request ride
@@ -73,14 +82,17 @@ export default function Dashboard() {
                   <div className="notif-icon">🔔</div>
                   <div className="notif-body">
                     <p className="notif-title">Trip {trip.status?.toUpperCase() || 'CREATED'}</p>
-                    <p className="notif-sub">From ITESO sector · {trip.createdAt || 'just now'}</p>
+                    <p className="notif-sub">
+                      From ITESO sector ·{' '}
+                      {trip.created_at ? new Date(trip.created_at).toLocaleString() : 'just now'}
+                    </p>
                   </div>
                 </li>
               ))}
             </ul>
 
             {trips.length > 0 && (
-              <button className="clear-btn" type="button">
+              <button className="clear-btn" type="button" onClick={() => setTrips([])}>
                 Clear all
               </button>
             )}
