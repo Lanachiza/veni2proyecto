@@ -5,31 +5,47 @@ export default function Navbar() {
   const { token, user, logout } = useAuth()
   const nav = useNavigate()
   const loc = useLocation()
+
+  if (loc.pathname === '/login' || loc.pathname === '/register') return null
+
   const onLogout = () => {
     logout()
     nav('/login')
   }
-  const isAuthPage = loc.pathname === '/login' || loc.pathname === '/register'
-  return (
-    <nav className="navbar">
-      <div className="brand">Veni 2</div>
-      {!isAuthPage && (
-        <div className="navlinks">
-          <Link to="/dashboard">Panel</Link>
-          <Link to="/new-trip">Nuevo viaje</Link>
-        </div>
-      )}
-      <div className="spacer" />
-      {token ? (
-        <div className="userbox">
-          <span>{user?.email}</span>
-          <button className="link" onClick={onLogout}>Salir</button>
-        </div>
-      ) : (
-        <div className="userbox">
-          <Link to="/login">Entrar</Link>
-        </div>
-      )}
-    </nav>
-  )}
 
+  return (
+    <header className="topbar nav-global">
+      <div className="topbar-left">
+        <h1 className="brand-title">
+          VENI <span>2</span>
+        </h1>
+        <nav className="topbar-nav">
+          <Link to="/" className={`topbar-link ${loc.pathname === '/' || loc.pathname === '/dashboard' ? 'active' : ''}`}>
+            Home
+          </Link>
+          <Link to="/new-trip" className={`topbar-link ${loc.pathname === '/new-trip' ? 'active' : ''}`}>
+            Request ride
+          </Link>
+          <Link to="/profile" className={`topbar-link ${loc.pathname === '/profile' ? 'active' : ''}`}>
+            Profile
+          </Link>
+        </nav>
+      </div>
+      <div className="topbar-right">
+        {token ? (
+          <>
+            <Link to="/profile" className="user-pill">
+              <span className="user-avatar">{user?.name?.[0]?.toUpperCase() || 'U'}</span>
+              <span className="user-name">{user?.name || user?.email}</span>
+            </Link>
+            <button className="topbar-logout" onClick={onLogout}>Logout</button>
+          </>
+        ) : (
+          <div className="userbox">
+            <Link to="/login">Entrar</Link>
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}

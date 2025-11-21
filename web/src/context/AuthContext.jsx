@@ -1,47 +1,55 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import client from '../api/client.js'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null)
-  const [user, setUser] = useState(null)
+  // Hidrata sesión desde localStorage
+  const [user, setUser] = useState(() => {
+    const stored = localStorage.getItem('user')
+    return stored ? JSON.parse(stored) : null
+  })
+  const [token, setToken] = useState(() => localStorage.getItem('token') || null)
 
+  // Sincroniza header Authorization
   useEffect(() => {
-    const t = localStorage.getItem('token')
-    const u = localStorage.getItem('user')
-    if (t) setToken(t)
-    if (u) setUser(JSON.parse(u))
-  }, [])
+    if (token) {
+      client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    } else {
+      delete client.defaults.headers.common['Authorization']
+    }
+  }, [token])
 
   const login = async (email, password) => {
     const res = await client.post('/login', { email, password })
-    setToken(res.data.token)
     setUser(res.data.user)
-    localStorage.setItem('token', res.data.token)
+    setToken(res.data.token)
     localStorage.setItem('user', JSON.stringify(res.data.user))
+    localStorage.setItem('token', res.data.token)
   }
 
-  const register = async (email, password, name) => {
-    const res = await client.post('/register', { email, password, name })
-    setToken(res.data.token)
+  const register = async (name, email, password) => {
+    const res = await client.post('/register', { name, email, password })
     setUser(res.data.user)
-    localStorage.setItem('token', res.data.token)
+    setToken(res.data.token)
     localStorage.setItem('user', JSON.stringify(res.data.user))
+    localStorage.setItem('token', res.data.token)
   }
 
   const logout = () => {
-    setToken(null)
     setUser(null)
-    localStorage.removeItem('token')
+    setToken(null)
     localStorage.removeItem('user')
+    localStorage.removeItem('token')
   }
 
-  const value = useMemo(() => ({ token, user, login, register, logout }), [token, user])
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, token, login, register, logout, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {
   return useContext(AuthContext)
 }
-
