@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [trips, setTrips] = useState([])
   const [loading, setLoading] = useState(true)
   const lastTrip = trips?.[0]
+  const statusMap = { pending: 'PENDIENTE', accepted: 'ACEPTADO', active: 'EN CURSO', completed: 'COMPLETADO' }
 
   useEffect(() => {
     async function fetchData() {
@@ -81,7 +82,7 @@ export default function Dashboard() {
                 <li key={trip.id} className="notif-item">
                   <div className="notif-icon">🔔</div>
                   <div className="notif-body">
-                    <p className="notif-title">Viaje {trip.status?.toUpperCase() || 'CREATED'}</p>
+                    <p className="notif-title">Viaje {statusMap[trip.status] || trip.status?.toUpperCase() || 'PENDIENTE'}</p>
                     <p className="notif-sub">
                       Desde sector ITESO ·{' '}
                       {trip.created_at ? new Date(trip.created_at).toLocaleString() : 'justo ahora'}
