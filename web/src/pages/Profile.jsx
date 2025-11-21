@@ -68,7 +68,7 @@ export default function Profile() {
 
           <form className="auth-form" onSubmit={onSubmit}>
             <label className="auth-label">
-              Name
+              Nombre
               <input
                 className="auth-input"
                 type="text"
@@ -79,7 +79,7 @@ export default function Profile() {
               />
             </label>
             <label className="auth-label">
-              Email
+              Correo
               <input
                 className="auth-input"
                 type="email"
@@ -90,7 +90,7 @@ export default function Profile() {
               />
             </label>
             <label className="auth-label">
-              New password (optional)
+              Nueva contraseña (opcional)
               <input
                 className="auth-input"
                 type="password"

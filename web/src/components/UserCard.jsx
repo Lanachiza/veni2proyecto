@@ -12,9 +12,9 @@ export default function UserCard({ user }) {
       </div>
 
       <div className="user-card-body">
-        <span className="user-tag">{user?.role || 'Passenger'}</span>
+        <span className="user-tag">{user?.role === 'driver' ? 'Conductor' : 'Pasajero'}</span>
         {user?.tripsCount != null && (
-          <p className="user-card-meta">{user.tripsCount} trips</p>
+          <p className="user-card-meta">{user.tripsCount} viajes</p>
         )}
       </div>
     </div>

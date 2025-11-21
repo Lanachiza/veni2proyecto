@@ -35,7 +35,7 @@ export default function Dashboard() {
       <main className="dash-layout">
         <section className="dash-left">
           <div className="dash-card dash-map-card">
-            <h2 className="dash-title">Next ride</h2>
+            <h2 className="dash-title">Próximo viaje</h2>
             <div className="dash-map">
               {lastTrip ? (
                 <MapView
@@ -43,21 +43,21 @@ export default function Dashboard() {
                   destination={{ lat: lastTrip?.destination?.[0], lng: lastTrip?.destination?.[1] }}
                 />
               ) : (
-                <p className="map-text">No trips yet. Request your first ride.</p>
+                <p className="map-text">Aún no tienes viajes. Solicita el primero.</p>
               )}
             </div>
             <Link to="/new-trip" className="primary-cta">
-              Request ride
+              Solicitar viaje
             </Link>
           </div>
 
           <div className="dash-metrics">
             <div className="metric-card">
-              <span className="metric-label">Users</span>
+              <span className="metric-label">Usuarios</span>
               <span className="metric-value">{metrics.users}</span>
             </div>
             <div className="metric-card">
-              <span className="metric-label">Trips</span>
+              <span className="metric-label">Viajes</span>
               <span className="metric-value">{metrics.trips}</span>
             </div>
           </div>
@@ -66,14 +66,14 @@ export default function Dashboard() {
         <section className="dash-right">
           <div className="dash-card">
             <div className="dash-card-header">
-              <h2 className="dash-title">Notifications</h2>
-              <span className="badge">New</span>
+              <h2 className="dash-title">Notificaciones</h2>
+              <span className="badge">Nuevo</span>
             </div>
 
-            {loading && <p className="dash-muted">Loading...</p>}
+            {loading && <p className="dash-muted">Cargando...</p>}
 
             {!loading && trips.length === 0 && (
-              <p className="dash-muted">No trips yet. Request your first ride.</p>
+              <p className="dash-muted">Aún no tienes viajes. Solicita el primero.</p>
             )}
 
             <ul className="notif-list">
@@ -81,10 +81,10 @@ export default function Dashboard() {
                 <li key={trip.id} className="notif-item">
                   <div className="notif-icon">🔔</div>
                   <div className="notif-body">
-                    <p className="notif-title">Trip {trip.status?.toUpperCase() || 'CREATED'}</p>
+                    <p className="notif-title">Viaje {trip.status?.toUpperCase() || 'CREATED'}</p>
                     <p className="notif-sub">
-                      From ITESO sector ·{' '}
-                      {trip.created_at ? new Date(trip.created_at).toLocaleString() : 'just now'}
+                      Desde sector ITESO ·{' '}
+                      {trip.created_at ? new Date(trip.created_at).toLocaleString() : 'justo ahora'}
                     </p>
                   </div>
                 </li>
@@ -93,13 +93,13 @@ export default function Dashboard() {
 
             {trips.length > 0 && (
               <button className="clear-btn" type="button" onClick={() => setTrips([])}>
-                Clear all
+                Limpiar
               </button>
             )}
           </div>
 
           <div className="dash-card">
-            <h2 className="dash-title">Your profile</h2>
+            <h2 className="dash-title">Tu perfil</h2>
             {user && <UserCard user={user} />}
           </div>
         </section>

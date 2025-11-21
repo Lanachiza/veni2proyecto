@@ -34,11 +34,11 @@ export default function Register() {
           VENI <span>2</span>
         </h1>
 
-        <h2 className="auth-subtitle">Sign up</h2>
+        <h2 className="auth-subtitle">Crear cuenta</h2>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <label className="auth-label">
-            Name
+            Nombre
             <input
               type="text"
               name="name"
@@ -50,7 +50,7 @@ export default function Register() {
           </label>
 
           <label className="auth-label">
-            Email
+            Correo
             <input
               type="email"
               name="email"
@@ -62,7 +62,7 @@ export default function Register() {
           </label>
 
           <label className="auth-label">
-            Password
+            Contraseña
             <input
               type="password"
               name="password"
@@ -73,29 +73,29 @@ export default function Register() {
             />
           </label>
           <label className="auth-label">
-            I am a:
+            Soy:
             <select
               name="role"
               value={form.role}
               onChange={handleChange}
               className="auth-input"
             >
-              <option value="passenger">Passenger</option>
-              <option value="driver">Driver</option>
+              <option value="passenger">Pasajero</option>
+              <option value="driver">Conductor</option>
             </select>
           </label>
 
           {error && <p className="auth-error">{error}</p>}
 
           <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Creando cuenta...' : 'Sign up'}
+            {loading ? 'Creando cuenta...' : 'Crear cuenta'}
           </button>
         </form>
 
         <p className="auth-footer-text">
-          Already have an account?{' '}
+          ¿Ya tienes cuenta?{' '}
           <Link to="/login" className="auth-footer-link">
-            Log in
+            Inicia sesión
           </Link>
         </p>
       </div>

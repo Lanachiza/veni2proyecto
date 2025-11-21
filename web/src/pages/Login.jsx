@@ -39,11 +39,11 @@ export default function Login() {
           <div className="auth-illustration-car" />
         </div>
 
-        <h2 className="auth-subtitle">Log in</h2>
+        <h2 className="auth-subtitle">Iniciar sesión</h2>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <label className="auth-label">
-            Email
+            Correo
             <input
               type="email"
               name="email"
@@ -55,7 +55,7 @@ export default function Login() {
           </label>
 
           <label className="auth-label">
-            Password
+            Contraseña
             <input
               type="password"
               name="password"
@@ -69,18 +69,18 @@ export default function Login() {
           {error && <p className="auth-error">{error}</p>}
 
           <button type="submit" className="auth-button" disabled={loading}>
-            {loading ? 'Entrando...' : 'Log in'}
+            {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 
         <button className="auth-link-button" type="button">
-          Forgot password?
+          ¿Olvidaste tu contraseña?
         </button>
 
         <p className="auth-footer-text">
-          Don't have an account?{' '}
+          ¿No tienes cuenta?{' '}
           <Link to="/register" className="auth-footer-link">
-            Sign up
+            Regístrate
           </Link>
         </p>
       </div>

@@ -21,13 +21,13 @@ export default function Navbar() {
         </h1>
         <nav className="topbar-nav">
           <Link to="/" className={`topbar-link ${loc.pathname === '/' || loc.pathname === '/dashboard' ? 'active' : ''}`}>
-            Home
+            Inicio
           </Link>
           <Link to="/new-trip" className={`topbar-link ${loc.pathname === '/new-trip' ? 'active' : ''}`}>
-            Request ride
+            Solicitar viaje
           </Link>
           <Link to="/profile" className={`topbar-link ${loc.pathname === '/profile' ? 'active' : ''}`}>
-            Profile
+            Perfil
           </Link>
         </nav>
       </div>
@@ -38,7 +38,7 @@ export default function Navbar() {
               <span className="user-avatar">{user?.name?.[0]?.toUpperCase() || 'U'}</span>
               <span className="user-name">{user?.name || user?.email}</span>
             </Link>
-            <button className="topbar-logout" onClick={onLogout}>Logout</button>
+            <button className="topbar-logout" onClick={onLogout}>Salir</button>
           </>
         ) : (
           <div className="userbox">
