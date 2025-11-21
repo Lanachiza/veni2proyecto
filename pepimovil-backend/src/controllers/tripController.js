@@ -83,11 +83,6 @@ export async function requestTrip(req, res, next) {
       distanceKm,
       price
     });
-    const driver = await findNearestDriver({ lat: origin[0], lng: origin[1] });
-    if (driver) {
-      await updateTripStatus(id, 'accepted', { driver_id: driver.id });
-      await notifyDriverAssignment(driver, trip);
-    }
     const result = await getTripById(id);
     res.status(201).json({ trip: { ...result, assignedServer } });
   } catch (err) {
@@ -133,11 +128,6 @@ export async function requestTripFromWeb(req, res, next) {
       distanceKm,
       price
     });
-    const driver = await findNearestDriver({ lat: originArr[0], lng: originArr[1] });
-    if (driver) {
-      await updateTripStatus(id, 'accepted', { driver_id: driver.id });
-      await notifyDriverAssignment(driver, { id, origin: originArr, destination: destinationArr });
-    }
     const result = await getTripById(id);
     res.status(201).json({ trip: { ...result, assignedServer } });
   } catch (err) {

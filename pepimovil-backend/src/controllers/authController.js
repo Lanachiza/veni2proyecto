@@ -34,7 +34,7 @@ export async function login(req, res, next) {
 
 export async function registerWithPassword(req, res, next) {
   try {
-    const { email, password, name } = req.body || {};
+    const { email, password, name, role } = req.body || {};
     if (!email || !password) {
       return res.status(400).json({ error: 'email and password required' });
     }

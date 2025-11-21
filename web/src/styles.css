@@ -449,6 +449,20 @@ button[disabled]{opacity:.6;cursor:not-allowed}
   border-radius:16px;
   overflow:hidden;
 }
+.pill-btn{
+  border:none;
+  background:#10b981;
+  color:#ffffff;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+.driver-trip-item{
+  justify-content:space-between;
+  align-items:center;
+}
 
 /* Users grid */
 .users-section{

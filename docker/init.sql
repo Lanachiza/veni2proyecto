@@ -34,5 +34,6 @@ ALTER TABLE trips ALTER COLUMN status SET DEFAULT 'created';
 ALTER TABLE trips ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE trips ALTER COLUMN updated_at SET DEFAULT now();
 ALTER TABLE users ADD COLUMN IF NOT EXISTS role varchar(20) NOT NULL DEFAULT 'passenger';
+ALTER TABLE trips ADD COLUMN IF NOT EXISTS driver_id uuid;
 
 CREATE INDEX IF NOT EXISTS idx_trips_user ON trips(user_id);

@@ -33,7 +33,7 @@ app.get('/api/metrics/summary', authMiddleware, async (req, res, next) => {
 });
 app.use('/api/auth', authRoutes);
 app.use('/api/trips', tripRoutes);
-app.use('/api/drivers', driverRoutes);
+app.use('/api', driverRoutes);
 app.use('/api/users', userRoutes);
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' });
