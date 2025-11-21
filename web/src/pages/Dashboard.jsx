@@ -111,8 +111,8 @@ export default function Dashboard() {
               <div className="dash-map">
                 {lastTrip ? (
                   <MapView
-                    origin={{ lat: lastTrip?.origin?.[0], lng: lastTrip?.origin?.[1] }}
-                    destination={{ lat: lastTrip?.destination?.[0], lng: lastTrip?.destination?.[1] }}
+                    origin={{ lat: Number(lastTrip.origin?.[0]), lng: Number(lastTrip.origin?.[1]) }}
+                    destination={{ lat: Number(lastTrip.destination?.[0]), lng: Number(lastTrip.destination?.[1]) }}
                   />
                 ) : (
                   <p className="map-text">Aún no tienes viajes. Solicita el primero.</p>
@@ -125,35 +125,49 @@ export default function Dashboard() {
           )}
 
           {isDriver && (
-            <div className="dash-card dash-map-card">
+            <div className="dash-card driver-panel-card">
               <h2 className="dash-title">Panel de conductor</h2>
               {activeTrip ? (
                 <div className="driver-active-box">
-                  <p className="notif-title">
-                    Viaje {activeTrip.status === 'in_progress' ? 'EN CURSO' : 'ACEPTADO'}
-                  </p>
-                  <p className="notif-sub">
-                    Desde sector ITESO ·{' '}
-                    {activeTrip.created_at ? new Date(activeTrip.created_at).toLocaleString() : 'justo ahora'}
-                  </p>
-                  {activeTrip.status === 'accepted' && (
-                    <button className="pill-btn" onClick={handleStart}>
-                      Iniciar viaje
-                    </button>
-                  )}
+                  <div className="driver-active-header">
+                    <div>
+                      <p className="driver-status">Viaje {statusMap[activeTrip.status] || activeTrip.status}</p>
+                      <p className="driver-subtitle">
+                        Desde sector ITESO ·{' '}
+                        {activeTrip.created_at ? new Date(activeTrip.created_at).toLocaleString() : 'justo ahora'}
+                      </p>
+                    </div>
+                    <div className="driver-actions">
+                      {activeTrip.status === 'accepted' && (
+                        <button className="pill-btn pill-btn-primary" onClick={() => handleStart(activeTrip.id)}>
+                          Iniciar viaje
+                        </button>
+                      )}
+                      {activeTrip.status === 'in_progress' && (
+                        <button className="pill-btn pill-btn-danger" onClick={() => handleComplete(activeTrip.id)}>
+                          Terminar
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="driver-map-wrapper">
+                    <MapView
+                      origin={{ lat: Number(activeTrip.origin?.[0]), lng: Number(activeTrip.origin?.[1]) }}
+                      destination={{ lat: Number(activeTrip.destination?.[0]), lng: Number(activeTrip.destination?.[1]) }}
+                    />
+                  </div>
+
                   {activeTrip.status === 'in_progress' && (
                     <div className="driver-timer-row">
                       <span className="timer-badge">
                         {minutes}:{seconds}
                       </span>
-                      <button className="pill-btn danger" onClick={handleComplete}>
-                        Terminar viaje
-                      </button>
                     </div>
                   )}
                 </div>
               ) : (
-                <p className="notif-sub">No tienes viajes activos.</p>
+                <p className="notif-sub">No hay viajes en curso.</p>
               )}
 
               <h3 className="driver-subtitle">Viajes pendientes</h3>

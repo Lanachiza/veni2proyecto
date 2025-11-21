@@ -464,7 +464,7 @@ button[disabled]{opacity:.6;cursor:not-allowed}
   align-items:center;
 }
 .pill-btn.danger{background:#ef4444;}
-.driver-active-box{margin-bottom:12px;}
+.driver-active-box{margin-bottom:12px;background:#fff7e6;border-radius:16px;padding:16px;}
 .driver-timer-row{display:flex;align-items:center;gap:12px;margin-top:8px;}
 .timer-badge{
   padding:6px 12px;
@@ -473,6 +473,15 @@ button[disabled]{opacity:.6;cursor:not-allowed}
   color:#ffffff;
   font-variant-numeric:tabular-nums;
 }
+.driver-map-wrapper{
+  margin-top:12px;
+  height:220px;
+}
+.driver-panel-card h2{margin-top:0;}
+.driver-active-header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;}
+.driver-status{margin:0;font-weight:700;color:#0f172a;}
+.driver-subtitle{margin:4px 0 0;font-size:12px;color:#6b7280;}
+.driver-actions{display:flex;gap:8px;flex-wrap:wrap;}
 
 /* Users grid */
 .users-section{
