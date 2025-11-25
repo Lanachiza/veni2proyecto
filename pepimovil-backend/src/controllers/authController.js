@@ -14,7 +14,6 @@ function generateToken(user) {
   );
 }
 
-// Login basado en idToken (stub previo, se deja por compatibilidad)
 export async function login(req, res, next) {
   try {
     const { idToken } = req.body || {};
